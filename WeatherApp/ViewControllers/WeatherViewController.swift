@@ -9,12 +9,11 @@ import UIKit
 
 class WeatherViewController: UIViewController {
 
-    
-
     @IBOutlet var currentLocationLabel: UILabel!
     @IBOutlet var temperatureLabel: UILabel!
     @IBOutlet var weatherImage: UIImageView!
-    @IBOutlet var minMaxLabel: UILabel!
+    @IBOutlet var highTemperatureLabel: UILabel!
+    @IBOutlet var lowTemperatureLabel: UILabel!
     @IBOutlet var weatherForecastTableView: UITableView!
 
     override func viewDidLoad() {
@@ -24,8 +23,6 @@ class WeatherViewController: UIViewController {
         view.addVerticalGradientLayer()
         
         setupNavigationBar()
-        
-        
     }
     
 
