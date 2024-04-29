@@ -13,6 +13,7 @@
 		12A5A6222BDA76C80098C155 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 12A5A6212BDA76C80098C155 /* Base */; };
 		12A5A6242BDA76D10098C155 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12A5A6232BDA76D10098C155 /* Assets.xcassets */; };
 		12A5A6272BDA76D10098C155 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 12A5A6262BDA76D10098C155 /* Base */; };
+		12CCB3D22BDFECA400537220 /* Extension + UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12CCB3D12BDFECA400537220 /* Extension + UIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		12A5A6232BDA76D10098C155 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		12A5A6262BDA76D10098C155 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		12A5A6282BDA76D10098C155 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		12CCB3D12BDFECA400537220 /* Extension + UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				12A5A62E2BDA77180098C155 /* App */,
 				12A5A62F2BDA77220098C155 /* ViewControllers */,
 				12A5A6302BDA773A0098C155 /* Storyboards */,
+				12CCB3D02BDFEC7D00537220 /* Extension */,
 				12A5A6312BDA77460098C155 /* Resources */,
 			);
 			path = WeatherApp;
@@ -97,6 +100,14 @@
 				12A5A6232BDA76D10098C155 /* Assets.xcassets */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		12CCB3D02BDFEC7D00537220 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				12CCB3D12BDFECA400537220 /* Extension + UIView.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -170,6 +181,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12CCB3D22BDFECA400537220 /* Extension + UIView.swift in Sources */,
 				12A5A61F2BDA76C80098C155 /* WeatherViewController.swift in Sources */,
 				12A5A61B2BDA76C80098C155 /* AppDelegate.swift in Sources */,
 				12A5A61D2BDA76C80098C155 /* SceneDelegate.swift in Sources */,
@@ -320,7 +332,6 @@
 		12A5A62C2BDA76D10098C155 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -355,7 +366,6 @@
 		12A5A62D2BDA76D10098C155 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
