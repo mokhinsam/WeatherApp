@@ -10,10 +10,9 @@ import UIKit
 class WeatherViewController: UIViewController {
 
     @IBOutlet var currentLocationLabel: UILabel!
-    @IBOutlet var temperatureLabel: UILabel!
+    @IBOutlet var tempLabel: UILabel!
     @IBOutlet var weatherImage: UIImageView!
-    @IBOutlet var highTemperatureLabel: UILabel!
-    @IBOutlet var lowTemperatureLabel: UILabel!
+    @IBOutlet var feelsLikeLabel: UILabel!
     @IBOutlet var weatherForecastTableView: UITableView!
 
     override func viewDidLoad() {
@@ -22,6 +21,7 @@ class WeatherViewController: UIViewController {
         
         view.addVerticalGradientLayer()
         
+        fetchWeather()
         setupNavigationBar()
     }
     
@@ -35,8 +35,20 @@ class WeatherViewController: UIViewController {
             .font: UIFont(name: "Avenir Medium", size: 40) ?? UIFont.systemFont(ofSize: 40)
         ]
         navBarAppearance.shadowColor = .clear
+        navBarAppearance.titlePositionAdjustment = .init(horizontal: 0, vertical: 20)
         navigationController?.navigationBar.standardAppearance = navBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
+    }
+    
+    private func fetchWeather() {
+        NetworkManager.shared.fetchWeather(from: "\(Link.weatherURL.rawValue)London") { [weak self] weather in
+            self?.title = weather.location.name
+            self?.tempLabel.text = String(format: "%.0f°", weather.current.tempC)
+            self?.feelsLikeLabel.text = String(format: "Feels like: %.0f°", weather.current.feelslikeC)
+            NetworkManager.shared.fetchImage(from: "https:\(weather.current.condition.icon)") { [weak self] imageData in
+                self?.weatherImage.image = UIImage(data: imageData)
+            }
+        }
     }
 
 }

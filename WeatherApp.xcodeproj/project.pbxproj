@@ -14,6 +14,8 @@
 		12A5A6242BDA76D10098C155 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 12A5A6232BDA76D10098C155 /* Assets.xcassets */; };
 		12A5A6272BDA76D10098C155 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 12A5A6262BDA76D10098C155 /* Base */; };
 		12CCB3D22BDFECA400537220 /* Extension + UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12CCB3D12BDFECA400537220 /* Extension + UIView.swift */; };
+		12CCB3DA2BE9026300537220 /* Weather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12CCB3D92BE9026300537220 /* Weather.swift */; };
+		12CCB3DC2BE902D600537220 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12CCB3DB2BE902D600537220 /* NetworkManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		12A5A6262BDA76D10098C155 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		12A5A6282BDA76D10098C155 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		12CCB3D12BDFECA400537220 /* Extension + UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension + UIView.swift"; sourceTree = "<group>"; };
+		12CCB3D92BE9026300537220 /* Weather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weather.swift; sourceTree = "<group>"; };
+		12CCB3DB2BE902D600537220 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +64,8 @@
 			children = (
 				12A5A62E2BDA77180098C155 /* App */,
 				12A5A62F2BDA77220098C155 /* ViewControllers */,
+				12CCB3D32BE8F85900537220 /* Models */,
+				12CCB3D42BE8F87D00537220 /* Services */,
 				12A5A6302BDA773A0098C155 /* Storyboards */,
 				12CCB3D02BDFEC7D00537220 /* Extension */,
 				12A5A6312BDA77460098C155 /* Resources */,
@@ -108,6 +114,22 @@
 				12CCB3D12BDFECA400537220 /* Extension + UIView.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		12CCB3D32BE8F85900537220 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				12CCB3D92BE9026300537220 /* Weather.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		12CCB3D42BE8F87D00537220 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				12CCB3DB2BE902D600537220 /* NetworkManager.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -184,7 +206,9 @@
 				12CCB3D22BDFECA400537220 /* Extension + UIView.swift in Sources */,
 				12A5A61F2BDA76C80098C155 /* WeatherViewController.swift in Sources */,
 				12A5A61B2BDA76C80098C155 /* AppDelegate.swift in Sources */,
+				12CCB3DC2BE902D600537220 /* NetworkManager.swift in Sources */,
 				12A5A61D2BDA76C80098C155 /* SceneDelegate.swift in Sources */,
+				12CCB3DA2BE9026300537220 /* Weather.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
