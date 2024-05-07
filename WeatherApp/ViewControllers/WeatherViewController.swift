@@ -14,15 +14,17 @@ class WeatherViewController: UIViewController {
     @IBOutlet var weatherImage: UIImageView!
     @IBOutlet var feelsLikeLabel: UILabel!
     @IBOutlet var weatherForecastTableView: UITableView!
-
+    
+    private var activityIndicator: UIActivityIndicatorView?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         weatherForecastTableView.dataSource = self
-        
         view.addVerticalGradientLayer()
         
         fetchWeather()
         setupNavigationBar()
+        activityIndicator = showActivityIndicator(in: weatherImage)
     }
     
 
@@ -41,14 +43,25 @@ class WeatherViewController: UIViewController {
     }
     
     private func fetchWeather() {
-        NetworkManager.shared.fetchWeather(from: "\(Link.weatherURL.rawValue)London") { [weak self] weather in
+        NetworkManager.shared.fetchWeather(from: "\(Link.weatherURL.rawValue)Moscow") { [weak self] weather in
             self?.title = weather.location.name
             self?.tempLabel.text = String(format: "%.0f°", weather.current.tempC)
             self?.feelsLikeLabel.text = String(format: "Feels like: %.0f°", weather.current.feelslikeC)
             NetworkManager.shared.fetchImage(from: "https:\(weather.current.condition.icon)") { [weak self] imageData in
                 self?.weatherImage.image = UIImage(data: imageData)
+                self?.activityIndicator?.stopAnimating()
             }
         }
+    }
+    
+    private func showActivityIndicator(in view: UIView) -> UIActivityIndicatorView {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.color = .white
+        activityIndicator.startAnimating()
+        activityIndicator.center = view.center
+        activityIndicator.hidesWhenStopped = true
+        view.addSubview(activityIndicator)
+        return activityIndicator
     }
 
 }
