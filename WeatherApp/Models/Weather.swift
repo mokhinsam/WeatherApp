@@ -20,11 +20,21 @@ struct Location: Decodable {
 struct Current: Decodable {
     let tempC: Double
     let condition: Condition
-    let feelslikeC: Double
+    let feelsLikeC: Double
+    
+    enum CodingKeys: String, CodingKey {
+        case tempC = "temp_c"
+        case condition = "condition"
+        case feelsLikeC = "feelslike_c"
+    }
 }
 
 struct Forecast: Decodable {
-    let forecastday: [ForecastDay]
+    let forecastDay: [ForecastDay]
+    
+    enum CodingKeys: String, CodingKey {
+        case forecastDay = "forecastday"
+    }
 }
 
 struct ForecastDay: Decodable {
@@ -33,9 +43,15 @@ struct ForecastDay: Decodable {
 }
 
 struct Day: Decodable {
-    let maxtempC: Double
-    let mintempC: Double
+    let maxTempC: Double
+    let minTempC: Double
     let condition: Condition
+    
+    enum CodingKeys: String, CodingKey {
+        case maxTempC = "maxtemp_c"
+        case minTempC = "mintemp_c"
+        case condition = "condition"
+    }
 }
 
 struct Condition: Decodable {
@@ -43,4 +59,5 @@ struct Condition: Decodable {
     let icon: String
     let code: Int
 }
+
 

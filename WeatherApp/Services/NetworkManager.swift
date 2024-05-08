@@ -34,9 +34,7 @@ class NetworkManager {
             }
     
             do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let weather = try decoder.decode(Weather.self, from: data)
+                let weather = try JSONDecoder().decode(Weather.self, from: data)
                 DispatchQueue.main.async {
                     completion(weather)
                 }
@@ -62,3 +60,4 @@ class NetworkManager {
         }
     }
 }
+

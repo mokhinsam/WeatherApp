@@ -44,7 +44,7 @@ class WeatherViewController: UIViewController {
             .font: UIFont(name: "Avenir Medium", size: 40) ?? UIFont.systemFont(ofSize: 40)
         ]
         navBarAppearance.shadowColor = .clear
-        navBarAppearance.titlePositionAdjustment = .init(horizontal: 0, vertical: 20)
+        navBarAppearance.titlePositionAdjustment = .init(horizontal: 0, vertical: 10)
         navigationController?.navigationBar.standardAppearance = navBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
     }
@@ -53,7 +53,7 @@ class WeatherViewController: UIViewController {
         NetworkManager.shared.fetchWeather(from: "\(Link.weatherURL.rawValue)\(query)") { [weak self] weather in
             self?.title = weather.location.name
             self?.tempLabel.text = String(format: "%.0f°", weather.current.tempC)
-            self?.feelsLikeLabel.text = String(format: "Feels like: %.0f°", weather.current.feelslikeC)
+            self?.feelsLikeLabel.text = String(format: "Feels like: %.0f°", weather.current.feelsLikeC)
             self?.weatherDescriptionLabel.text = weather.current.condition.text
             NetworkManager.shared.fetchImage(from: "https:\(weather.current.condition.icon)") { [weak self] imageData in
                 self?.weatherImage.image = UIImage(data: imageData)
