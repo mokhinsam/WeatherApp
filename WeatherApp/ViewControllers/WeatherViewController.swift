@@ -12,6 +12,7 @@ class WeatherViewController: UIViewController {
     @IBOutlet var currentLocationLabel: UILabel!
     @IBOutlet var tempLabel: UILabel!
     @IBOutlet var weatherImage: UIImageView!
+    @IBOutlet var weatherDescriptionLabel: UILabel!
     @IBOutlet var feelsLikeLabel: UILabel!
     @IBOutlet var weatherForecastTableView: UITableView!
     
@@ -47,6 +48,7 @@ class WeatherViewController: UIViewController {
             self?.title = weather.location.name
             self?.tempLabel.text = String(format: "%.0f°", weather.current.tempC)
             self?.feelsLikeLabel.text = String(format: "Feels like: %.0f°", weather.current.feelslikeC)
+            self?.weatherDescriptionLabel.text = weather.current.condition.text
             NetworkManager.shared.fetchImage(from: "https:\(weather.current.condition.icon)") { [weak self] imageData in
                 self?.weatherImage.image = UIImage(data: imageData)
                 self?.activityIndicator?.stopAnimating()
