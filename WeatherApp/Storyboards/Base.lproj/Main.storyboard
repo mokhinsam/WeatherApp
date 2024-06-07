@@ -3,7 +3,7 @@
     <device id="retina6_72" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -36,7 +36,7 @@
                                         <rect key="frame" x="168.33333333333334" y="112" width="93.666666666666657" height="87.333333333333314"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Feels like: -" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Nf-v6-pUL" userLabel="Feels like label">
-                                                <rect key="frame" x="3.6666666666666572" y="0.0" width="86.333333333333329" height="23.333333333333329"/>
+                                                <rect key="frame" x="3.6666666666666572" y="0.0" width="86.333333333333329" height="23.333333333333332"/>
                                                 <fontDescription key="fontDescription" name="Avenir-Medium" family="Avenir" pointSize="17"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -102,6 +102,9 @@
                     <navigationItem key="navigationItem" title="City" id="7eM-dY-4Jl">
                         <barButtonItem key="rightBarButtonItem" systemItem="search" id="IxA-hT-jBd">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <segue destination="D3v-4t-WwP" kind="presentation" id="Dke-uJ-lge"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
@@ -116,6 +119,78 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4783.1999999999998" y="-637.6847290640394"/>
+        </scene>
+        <!--Search View Controller-->
+        <scene sceneID="BR1-CH-UqT">
+            <objects>
+                <viewController id="D3v-4t-WwP" customClass="SearchViewController" customModule="WeatherApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="6d2-F1-wju">
+                        <rect key="frame" x="0.0" y="0.0" width="430" height="922"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weather" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DoJ-TJ-fOf">
+                                <rect key="frame" x="16" y="15.999999999999996" width="164.66666666666666" height="54.666666666666657"/>
+                                <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="40"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" alpha="0.65000000000000002" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="eAk-cs-WiW">
+                                <rect key="frame" x="0.0" y="131.66666666666669" width="430" height="790.33333333333326"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" alpha="0.80000000000000004" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SearchResultCell" textLabel="zOt-KI-nPp" style="IBUITableViewCellStyleDefault" id="AFA-Hu-NQT">
+                                        <rect key="frame" x="0.0" y="55.333332061767578" width="430" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.55000000000000004" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="AFA-Hu-NQT" id="rhS-A4-cfz">
+                                            <rect key="frame" x="0.0" y="0.0" width="430" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zOt-KI-nPp">
+                                                    <rect key="frame" x="20" y="0.0" width="390" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="16"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <searchBar contentMode="redraw" barStyle="black" searchBarStyle="minimal" placeholder="Search for a city" translatesAutoresizingMaskIntoConstraints="NO" id="Rmk-tW-fOS">
+                                <rect key="frame" x="16" y="75.666666666666671" width="398" height="56.000000000000014"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="search"/>
+                                <connections>
+                                    <outlet property="delegate" destination="D3v-4t-WwP" id="Luh-Nr-ZMX"/>
+                                </connections>
+                            </searchBar>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Hap-Tm-A15"/>
+                        <color key="backgroundColor" systemColor="labelColor"/>
+                        <constraints>
+                            <constraint firstItem="DoJ-TJ-fOf" firstAttribute="leading" secondItem="Hap-Tm-A15" secondAttribute="leading" constant="16" id="D0g-hn-Kad"/>
+                            <constraint firstItem="Rmk-tW-fOS" firstAttribute="top" secondItem="DoJ-TJ-fOf" secondAttribute="bottom" constant="5" id="DLr-RM-jCz"/>
+                            <constraint firstItem="Rmk-tW-fOS" firstAttribute="leading" secondItem="Hap-Tm-A15" secondAttribute="leading" constant="16" id="EEU-Gf-tZQ"/>
+                            <constraint firstItem="eAk-cs-WiW" firstAttribute="leading" secondItem="Hap-Tm-A15" secondAttribute="leading" id="UMm-g0-9On"/>
+                            <constraint firstAttribute="bottom" secondItem="eAk-cs-WiW" secondAttribute="bottom" id="V4q-XP-evN"/>
+                            <constraint firstItem="DoJ-TJ-fOf" firstAttribute="top" secondItem="Hap-Tm-A15" secondAttribute="top" constant="16" id="WbU-Y1-5yC"/>
+                            <constraint firstItem="eAk-cs-WiW" firstAttribute="trailing" secondItem="Hap-Tm-A15" secondAttribute="trailing" id="Y19-Hu-QaK"/>
+                            <constraint firstItem="eAk-cs-WiW" firstAttribute="top" secondItem="Rmk-tW-fOS" secondAttribute="bottom" id="bXN-6p-8FW"/>
+                            <constraint firstItem="Hap-Tm-A15" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="DoJ-TJ-fOf" secondAttribute="trailing" symbolic="YES" id="dNf-65-9DK"/>
+                            <constraint firstAttribute="trailing" secondItem="Rmk-tW-fOS" secondAttribute="trailing" constant="16" id="opO-mt-Ar0"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="18T-Gj-dpI"/>
+                    <connections>
+                        <outlet property="searchBar" destination="Rmk-tW-fOS" id="o8u-kc-ihQ"/>
+                        <outlet property="searchResultsTableView" destination="eAk-cs-WiW" id="2UV-bn-rfX"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sdp-Ex-9Q0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5592.5581395348836" y="-637.33905579399141"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ySm-iv-QxQ">

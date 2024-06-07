@@ -8,6 +8,10 @@
 import UIKit
 import CoreLocation
 
+protocol SearchViewControllerDelegate {
+    func setNewWeatherValue(from: String)
+}
+
 class WeatherViewController: UIViewController {
 
     @IBOutlet var currentLocationLabel: UILabel!
@@ -32,6 +36,11 @@ class WeatherViewController: UIViewController {
         
         setupNavigationBar()
         activityIndicator = showActivityIndicator(in: weatherImage)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let searchVC = segue.destination as? SearchViewController else { return }
+        searchVC.delegate = self
     }
     
 
@@ -72,6 +81,13 @@ class WeatherViewController: UIViewController {
         return activityIndicator
     }
 
+}
+
+//MARK: - SearchViewControllerDelegate
+extension WeatherViewController: SearchViewControllerDelegate {
+    func setNewWeatherValue(from query: String) {
+        fetchWeather(from: query)
+    }
 }
 
 //MARK: - UITableViewDataSource
