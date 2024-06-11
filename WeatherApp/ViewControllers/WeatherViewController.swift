@@ -9,7 +9,7 @@ import UIKit
 import CoreLocation
 
 protocol SearchViewControllerDelegate {
-    func setNewWeatherValue(from: String)
+    func setNewWeatherValue(from nameLocation: String)
 }
 
 class WeatherViewController: UIViewController {
@@ -21,8 +21,16 @@ class WeatherViewController: UIViewController {
     @IBOutlet var feelsLikeLabel: UILabel!
     @IBOutlet var weatherForecastTableView: UITableView!
     
-    private var activityIndicator: UIActivityIndicatorView?
     private let locationManager = CLLocationManager()
+    private var activityIndicator: UIActivityIndicatorView?
+    
+    private var weatherData: Weather? {
+        didSet {
+            updateUI()
+        }
+    }
+    
+    private var currentLocationLabelIsHidden = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +41,7 @@ class WeatherViewController: UIViewController {
         locationManager.requestWhenInUseAuthorization()
         
         view.addVerticalGradientLayer()
+        
         
         setupNavigationBar()
         activityIndicator = showActivityIndicator(in: weatherImage)
@@ -58,15 +67,57 @@ class WeatherViewController: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
     }
     
-    private func fetchWeather(from query: String) {
-        NetworkManager.shared.fetchWeather(from: "\(Link.weatherURL.rawValue)\(query)") { [weak self] weather in
-            self?.title = weather.location.name
-            self?.tempLabel.text = String(format: "%.0f°", weather.current.tempC)
-            self?.feelsLikeLabel.text = String(format: "Feels like: %.0f°", weather.current.feelsLikeC)
-            self?.weatherDescriptionLabel.text = weather.current.condition.text
-            NetworkManager.shared.fetchImage(from: "https:\(weather.current.condition.icon)") { [weak self] imageData in
+    
+    private func updateUI() {
+        guard let weatherData = weatherData else {
+            title = "Weather information not available"
+            tempLabel.text = "- -"
+            feelsLikeLabel.isHidden = true
+            weatherDescriptionLabel.isHidden = true
+            weatherImage.isHidden = true
+            return
+        }
+        title = weatherData.location.name
+        tempLabel.text = String(format: "%.0f°", weatherData.current.tempC)
+        feelsLikeLabel.text = String(format: "Feels like: %.0f°", weatherData.current.feelsLikeC)
+        weatherDescriptionLabel.text = weatherData.current.condition.text
+        currentLocationLabel.isHidden = currentLocationLabelIsHidden ? true : false
+        getImage(from: weatherData.current.condition.icon)
+        weatherForecastTableView.reloadData()
+    }
+    
+    
+    private func getWeather(from query: String) {
+        NetworkManager.shared.fetchWeather(
+            from: "\(Link.weatherURL.rawValue)\(query)") { [weak self] result in
+                switch result {
+                case .success(let weatherData):
+                    self?.weatherData = weatherData
+                case .failure(let error):
+                    print("error 7")
+                    print(error)
+                }
+            }
+    }
+    
+    private func getImage(from query: String) {
+        NetworkManager.shared.fetchImage(from: "https:\(query)") { [weak self] result in
+            switch result {
+            case .success(let imageData):
                 self?.weatherImage.image = UIImage(data: imageData)
                 self?.activityIndicator?.stopAnimating()
+            case .failure(let error):
+                let defaultImage = UIImage(
+                    systemName: "thermometer.medium",
+                    withConfiguration: UIImage.SymbolConfiguration(
+                        pointSize: 130, weight: .light, scale: .small)
+                )
+                DispatchQueue.main.async {
+                    self?.weatherImage.image = defaultImage
+                    self?.activityIndicator?.stopAnimating()
+                }
+                print("error 8")
+                print(error)
             }
         }
     }
@@ -85,28 +136,32 @@ class WeatherViewController: UIViewController {
 
 //MARK: - SearchViewControllerDelegate
 extension WeatherViewController: SearchViewControllerDelegate {
-    func setNewWeatherValue(from query: String) {
-        fetchWeather(from: query)
+    func setNewWeatherValue(from nameLocation: String) {
+        getWeather(from: nameLocation)
+        currentLocationLabelIsHidden = true
     }
 }
 
 //MARK: - UITableViewDataSource
 extension WeatherViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        5
-        
+        weatherData?.forecast.forecastDay.count ?? 0
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherForecastCell", for: indexPath)
         var content = cell.defaultContentConfiguration()
-        content.text = "Cell"
+        let weatherForecast = weatherData?.forecast.forecastDay[indexPath.row]
+        content.text = weatherForecast?.date
+        content.textProperties.color = .white
         cell.contentConfiguration = content
         return cell
     }
     
-    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        section == 0 ? "3-day forecast" : ""
+    }
     
 }
 
@@ -116,7 +171,9 @@ extension WeatherViewController: CLLocationManagerDelegate {
         guard let location = locations.last else { return }
         let lat = location.coordinate.latitude
         let lon = location.coordinate.longitude
-        fetchWeather(from: "\(lat),\(lon)")
+        getWeather(from: "\(lat),\(lon)")
+//        getWeather(from: "\(lat)")
+        currentLocationLabelIsHidden = false
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {

@@ -14,7 +14,7 @@ class LocalSearchManager: NSObject {
     
     private var searchCompleter = MKLocalSearchCompleter()
     private var searchResults: [MKLocalSearchCompletion] = []
-    private var onSearch: (([MKLocalSearchCompletion]) -> Void)? = nil
+    private var onSearch: (([MKLocalSearchCompletion]) -> Void)?
     
     override private init() {
         super.init()

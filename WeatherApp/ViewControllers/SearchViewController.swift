@@ -27,7 +27,11 @@ class SearchViewController: UIViewController {
 extension SearchViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         LocalSearchManager.shared.search(text: searchText) { [unowned self] results in
-            searchResults = results.map { "\($0.title) \($0.subtitle)"}
+            searchResults = results.map {
+                !$0.subtitle.isEmpty ?
+                "\($0.title), \($0.subtitle)"
+                : "\($0.title)"
+            }
             searchResultsTableView.reloadData()
         }
     }
