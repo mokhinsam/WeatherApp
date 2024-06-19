@@ -71,7 +71,7 @@ class WeatherViewController: UIViewController {
     private func updateUI() {
         guard let weatherData = weatherData else {
             title = "Weather information not available"
-            tempLabel.text = "- -"
+            tempLabel.text = "--°"
             feelsLikeLabel.isHidden = true
             weatherDescriptionLabel.isHidden = true
             weatherImage.isHidden = true
@@ -82,7 +82,7 @@ class WeatherViewController: UIViewController {
         feelsLikeLabel.text = String(format: "Feels like: %.0f°", weatherData.current.feelsLikeC)
         weatherDescriptionLabel.text = weatherData.current.condition.text
         currentLocationLabel.isHidden = currentLocationLabelIsHidden ? true : false
-        getImage(from: weatherData.current.condition.icon)
+        getWeatherImage(from: weatherData.current.condition.icon)
         weatherForecastTableView.reloadData()
     }
     
@@ -100,7 +100,7 @@ class WeatherViewController: UIViewController {
             }
     }
     
-    private func getImage(from query: String) {
+    private func getWeatherImage(from query: String) {
         NetworkManager.shared.fetchImage(from: "https:\(query)") { [weak self] result in
             switch result {
             case .success(let imageData):
@@ -112,7 +112,7 @@ class WeatherViewController: UIViewController {
                     withConfiguration: UIImage.SymbolConfiguration(
                         pointSize: 130, weight: .light, scale: .small)
                 )
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak self] in
                     self?.weatherImage.image = defaultImage
                     self?.activityIndicator?.stopAnimating()
                 }
@@ -151,16 +151,21 @@ extension WeatherViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherForecastCell", for: indexPath)
-        var content = cell.defaultContentConfiguration()
-        let weatherForecast = weatherData?.forecast.forecastDay[indexPath.row]
-        content.text = weatherForecast?.date
-        content.textProperties.color = .white
-        cell.contentConfiguration = content
+        guard let cell = cell as? WeatherForecastCell else { return UITableViewCell() }
+        
+
+        
+        guard let weatherData = weatherData else {
+            print("error 9")
+            return UITableViewCell()
+        }
+        let weatherForecast = weatherData.forecast.forecastDay[indexPath.row]
+        cell.configure(with: weatherForecast)
         return cell
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        section == 0 ? "3-day forecast" : ""
+        "3-day forecast" 
     }
     
 }
@@ -172,7 +177,6 @@ extension WeatherViewController: CLLocationManagerDelegate {
         let lat = location.coordinate.latitude
         let lon = location.coordinate.longitude
         getWeather(from: "\(lat),\(lon)")
-//        getWeather(from: "\(lat)")
         currentLocationLabelIsHidden = false
     }
     

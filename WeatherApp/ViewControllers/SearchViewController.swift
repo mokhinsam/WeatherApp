@@ -21,6 +21,11 @@ class SearchViewController: UIViewController {
         searchResultsTableView.delegate = self
         searchBar.delegate = self
     }
+    
+    @IBAction func downButtonDidPressed() {
+        dismiss(animated: true)
+    }
+    
 }
 
 //MARK: - UISearchBarDelegate
