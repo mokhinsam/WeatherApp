@@ -196,7 +196,7 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <searchBar contentMode="redraw" barStyle="black" searchBarStyle="minimal" placeholder="Search for a city" translatesAutoresizingMaskIntoConstraints="NO" id="Rmk-tW-fOS">
+                            <searchBar contentMode="redraw" barStyle="black" searchBarStyle="minimal" placeholder="Search for a city or adress" translatesAutoresizingMaskIntoConstraints="NO" id="Rmk-tW-fOS">
                                 <rect key="frame" x="16" y="89.666666666666671" width="398" height="56.000000000000014"/>
                                 <textInputTraits key="textInputTraits" returnKeyType="search"/>
                                 <connections>

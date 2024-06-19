@@ -134,14 +134,6 @@ class WeatherViewController: UIViewController {
 
 }
 
-//MARK: - SearchViewControllerDelegate
-extension WeatherViewController: SearchViewControllerDelegate {
-    func setNewWeatherValue(from nameLocation: String) {
-        getWeather(from: nameLocation)
-        currentLocationLabelIsHidden = true
-    }
-}
-
 //MARK: - UITableViewDataSource
 extension WeatherViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -170,6 +162,24 @@ extension WeatherViewController: UITableViewDataSource {
     
 }
 
+//MARK: - SearchViewControllerDelegate
+extension WeatherViewController: SearchViewControllerDelegate {
+    func setNewWeatherValue(from nameLocation: String) {
+        getCoordinate(addressString: nameLocation) { location, error in
+            guard error == nil else {
+                print("Error 12:");
+                return
+            }
+            
+            self.getWeather(from: "\(location.latitude),\(location.longitude)")
+            print(nameLocation)
+            print(location.latitude)
+            print(location.longitude)
+        }
+        currentLocationLabelIsHidden = true
+    }
+}
+
 //MARK: - CLLocationManagerDelegate
 extension WeatherViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -186,3 +196,23 @@ extension WeatherViewController: CLLocationManagerDelegate {
     }
 }
 
+func getCoordinate( addressString : String, completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
+    let geocoder = CLGeocoder()
+    geocoder.geocodeAddressString(addressString) { (placemarks, error) in
+        if error == nil {
+            if let placemark = placemarks?[0] {
+                let location = placemark.location!
+                
+                completionHandler(location.coordinate, nil)
+                return
+            }
+        }
+        
+        completionHandler(kCLLocationCoordinate2DInvalid, error as NSError?)
+    }
+    
+  
+    
+
+    
+}

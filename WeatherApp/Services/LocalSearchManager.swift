@@ -19,7 +19,7 @@ class LocalSearchManager: NSObject {
     override private init() {
         super.init()
         searchCompleter.delegate = self
-        searchCompleter.pointOfInterestFilter = MKPointOfInterestFilter.excludingAll
+        searchCompleter.resultTypes = MKLocalSearchCompleter.ResultType([.query, .address])
     }
     
     func search(text: String, onSearch: @escaping (([MKLocalSearchCompletion]) -> Void)) {
@@ -31,7 +31,7 @@ class LocalSearchManager: NSObject {
 //MARK: - MKLocalSearchCompleterDelegate
 extension LocalSearchManager: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        filtering(searchResults, from: completer)
+        searchResults = completer.results
         onSearch?(searchResults)
     }
     
@@ -39,19 +39,5 @@ extension LocalSearchManager: MKLocalSearchCompleterDelegate {
         print("error 5")
         print(error)
         print(error.localizedDescription)
-    }
-}
-
-//MARK: - Private Methods
-extension LocalSearchManager {
-    private func filtering(_ searchResults: [MKLocalSearchCompletion], from completer: MKLocalSearchCompleter) {
-        let results = completer.results.filter { result in
-            guard !result.title.contains(",") else { return false }
-            guard result.title.rangeOfCharacter(from: CharacterSet.decimalDigits) == nil else { return false }
-            guard !result.subtitle.contains("Nearby") else { return false }
-            guard result.subtitle.rangeOfCharacter(from: CharacterSet.decimalDigits) == nil else { return false }
-            return true
-        }
-        self.searchResults = results
     }
 }
