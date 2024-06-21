@@ -15,8 +15,9 @@ class WeatherForecastCell: UITableViewCell {
     
     func configure(with weatherForecast: ForecastDay) {
         weekdayLabel.text = getWeekdayName(from: weatherForecast.date)
-        minMaxTempLabel.text =
-        "↓\(weatherForecast.day.minTempC)° ↑\(weatherForecast.day.maxTempC)°"
+        minMaxTempLabel.text = weatherForecast.day.minTempC.description.count == 3 ?
+        "↓0\(weatherForecast.day.minTempC)° ↑\(weatherForecast.day.maxTempC)°"
+        : "↓\(weatherForecast.day.minTempC)° ↑\(weatherForecast.day.maxTempC)°"
         getWeatherImage(from: weatherForecast.day.condition.icon)
     }
 }
