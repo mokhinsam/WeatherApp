@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import CoreLocation
 
 protocol SearchViewControllerDelegate {
     func setNewWeatherValue(from nameLocation: String)
@@ -21,7 +20,6 @@ class WeatherViewController: UIViewController {
     @IBOutlet var feelsLikeLabel: UILabel!
     @IBOutlet var weatherForecastTableView: UITableView!
     
-    private let locationManager = CLLocationManager()
     private var activityIndicator: UIActivityIndicatorView?
     
     private var weatherData: Weather? {
@@ -36,15 +34,11 @@ class WeatherViewController: UIViewController {
         super.viewDidLoad()
         weatherForecastTableView.dataSource = self
         
-        locationManager.delegate = self
-        locationManager.requestLocation()
-        locationManager.requestWhenInUseAuthorization()
+        requestLocation()
         
         view.addVerticalGradientLayer()
-        
-        
-        setupNavigationBar()
         activityIndicator = showActivityIndicator(in: weatherImage)
+        setupNavigationBar()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -131,7 +125,16 @@ class WeatherViewController: UIViewController {
         view.addSubview(activityIndicator)
         return activityIndicator
     }
-
+    
+    private func requestLocation() {
+        LocationManager.shared.requestLocation { [unowned self] locations in
+            guard let location = locations.last else { return }
+            let lat = location.coordinate.latitude
+            let lon = location.coordinate.longitude
+            getWeather(from: "\(lat),\(lon)")
+            currentLocationLabelIsHidden = false
+        }
+    }
 }
 
 //MARK: - UITableViewDataSource
@@ -140,12 +143,9 @@ extension WeatherViewController: UITableViewDataSource {
         weatherData?.forecast.forecastDay.count ?? 0
     }
     
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherForecastCell", for: indexPath)
         guard let cell = cell as? WeatherForecastCell else { return UITableViewCell() }
-        
-
         
         guard let weatherData = weatherData else {
             print("error 9")
@@ -159,60 +159,19 @@ extension WeatherViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         "3-day forecast" 
     }
-    
 }
 
 //MARK: - SearchViewControllerDelegate
 extension WeatherViewController: SearchViewControllerDelegate {
     func setNewWeatherValue(from nameLocation: String) {
-        getCoordinate(addressString: nameLocation) { location, error in
+        LocationManager.shared.getCoordinate(from: nameLocation) { location, error in
             guard error == nil else {
-                print("Error 12:");
+                print("Error 12:")
+                print(error?.localizedDescription ?? "No error description")
                 return
             }
-            
             self.getWeather(from: "\(location.latitude),\(location.longitude)")
-            print(nameLocation)
-            print(location.latitude)
-            print(location.longitude)
         }
         currentLocationLabelIsHidden = true
     }
-}
-
-//MARK: - CLLocationManagerDelegate
-extension WeatherViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
-        let lat = location.coordinate.latitude
-        let lon = location.coordinate.longitude
-        getWeather(from: "\(lat),\(lon)")
-        currentLocationLabelIsHidden = false
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
-        print("error 4")
-        print(error)
-    }
-}
-
-func getCoordinate( addressString : String, completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
-    let geocoder = CLGeocoder()
-    geocoder.geocodeAddressString(addressString) { (placemarks, error) in
-        if error == nil {
-            if let placemark = placemarks?[0] {
-                let location = placemark.location!
-                
-                completionHandler(location.coordinate, nil)
-                return
-            }
-        }
-        
-        completionHandler(kCLLocationCoordinate2DInvalid, error as NSError?)
-    }
-    
-  
-    
-
-    
 }
