@@ -46,7 +46,11 @@ class WeatherViewController: UIViewController {
         searchVC.delegate = self
     }
     
-
+    @IBAction func locationButtonDidPressed(_ sender: UIBarButtonItem) {
+        currentLocationLabelIsHidden = false
+        requestLocation()
+    }
+    
     private func setupNavigationBar() {
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()
