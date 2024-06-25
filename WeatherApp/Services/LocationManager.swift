@@ -12,7 +12,7 @@ class LocationManager: NSObject {
     static let shared = LocationManager()
     
     private let locationManager = CLLocationManager()
-    private var didUpdateLocations: (([CLLocation]) -> Void)?
+    private var locationUpdated: ((CLLocation?, NSError?) -> Void)?
     
     override private init() {
         super.init()
@@ -20,12 +20,12 @@ class LocationManager: NSObject {
         locationManager.requestWhenInUseAuthorization()
     }
     
-    func requestLocation(with didUpdateLocations: @escaping(([CLLocation]) -> Void)) {
-        print("Starting Location Updates")
+    func requestLocation(with locationUpdated: @escaping(CLLocation?, NSError?) -> Void) {
         locationManager.requestLocation()
-        self.didUpdateLocations = didUpdateLocations
+        print("Starting Location Updates")
+        self.locationUpdated = locationUpdated
     }
-    
+
     func getCoordinate(from addressString: String, completionHandler: @escaping(CLLocationCoordinate2D, NSError?) -> Void ) {
         let geocoder = CLGeocoder()
         geocoder.geocodeAddressString(addressString) { (placemarks, error) in
@@ -44,12 +44,18 @@ class LocationManager: NSObject {
 //MARK: - CLLocationManagerDelegate
 extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        didUpdateLocations?(locations)
+        print("Check didUpdateLocations")
+        
+        guard let location = locations.first else { return }
+        locationUpdated?(location, nil)
+        
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
         print("error 13")
         print(error)
         print(error.localizedDescription)
+        
+        locationUpdated?(nil, error as NSError)
     }
 }

@@ -37,7 +37,9 @@ extension SearchViewController: UISearchBarDelegate {
                 "\($0.title), \($0.subtitle)"
                 : "\($0.title)"
             }
-            searchResultsTableView.reloadData()
+            DispatchQueue.main.async {
+                self.searchResultsTableView.reloadData()
+            }
         }
     }
 }

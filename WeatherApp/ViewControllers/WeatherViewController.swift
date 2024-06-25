@@ -13,32 +13,39 @@ protocol SearchViewControllerDelegate {
 
 class WeatherViewController: UIViewController {
 
+    @IBOutlet var cityLabel: UILabel!
     @IBOutlet var currentLocationLabel: UILabel!
     @IBOutlet var tempLabel: UILabel!
     @IBOutlet var weatherImage: UIImageView!
     @IBOutlet var weatherDescriptionLabel: UILabel!
     @IBOutlet var feelsLikeLabel: UILabel!
     @IBOutlet var weatherForecastTableView: UITableView!
+    @IBOutlet var loadingView: UIView!
+    @IBOutlet var errorDescriptionLabel: UILabel!
     
-    private var activityIndicator: UIActivityIndicatorView?
-    
+    private var imageActivityIndicator: UIActivityIndicatorView?
+    private var loadingActivityIndicator: UIActivityIndicatorView?
+    private var currentLocationLabelIsHidden = true
     private var weatherData: Weather? {
         didSet {
-            updateUI()
+            setupUI()
         }
     }
     
-    private var currentLocationLabelIsHidden = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
         weatherForecastTableView.dataSource = self
-        
         requestLocation()
         
         view.addVerticalGradientLayer()
-        activityIndicator = showActivityIndicator(in: weatherImage)
+        loadingView.addVerticalGradientLayer()
         setupNavigationBar()
+        
+        loadingActivityIndicator = showActivityIndicator(in: loadingView, style: .large)
+        imageActivityIndicator = showActivityIndicator(in: weatherImage, style: .medium)
+        
+        errorDescriptionLabel.isHidden = true
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -47,9 +54,30 @@ class WeatherViewController: UIViewController {
     }
     
     @IBAction func locationButtonDidPressed(_ sender: UIBarButtonItem) {
-        currentLocationLabelIsHidden = false
+        showLoadingView()
         requestLocation()
+        currentLocationLabelIsHidden = false
     }
+}
+
+//MARK: - Setup UI
+extension WeatherViewController {
+    private func setupUI() {
+        guard let weatherData = weatherData else { return }
+        print("setupUI GO")
+        title = weatherData.location.country
+        cityLabel.text = weatherData.location.name
+        tempLabel.text = String(format: "%.0f°", weatherData.current.tempC)
+        feelsLikeLabel.text =
+        String(format: "Feels like: %.0f°", weatherData.current.feelsLikeC)
+        weatherDescriptionLabel.text = weatherData.current.condition.text
+        currentLocationLabel.isHidden = 
+        currentLocationLabelIsHidden ? true : false
+        getWeatherImage(from: weatherData.current.condition.icon)
+        weatherForecastTableView.reloadData()
+    }
+    
+    
     
     private func setupNavigationBar() {
         let navBarAppearance = UINavigationBarAppearance()
@@ -57,7 +85,8 @@ class WeatherViewController: UIViewController {
         navBarAppearance.backgroundColor = .clear
         navBarAppearance.titleTextAttributes = [
             .foregroundColor: UIColor.white,
-            .font: UIFont(name: "Avenir Medium", size: 40) ?? UIFont.systemFont(ofSize: 40)
+            .font: UIFont(name: "Avenir Medium", size: 17) 
+            ?? UIFont.systemFont(ofSize: 17)
         ]
         navBarAppearance.shadowColor = .clear
         navBarAppearance.titlePositionAdjustment = .init(horizontal: 0, vertical: 10)
@@ -65,32 +94,44 @@ class WeatherViewController: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
     }
     
+    private func showActivityIndicator(
+        in view: UIView,
+        style: UIActivityIndicatorView.Style
+    ) -> UIActivityIndicatorView {
+        let activityIndicator = UIActivityIndicatorView(style: style)
+        activityIndicator.color = .white
+        activityIndicator.startAnimating()
+        activityIndicator.center = view.center
+        activityIndicator.hidesWhenStopped = true
+        view.addSubview(activityIndicator)
+        return activityIndicator
+    }
+
     
-    private func updateUI() {
-        guard let weatherData = weatherData else {
-            title = "Weather information not available"
-            tempLabel.text = "--°"
-            feelsLikeLabel.isHidden = true
-            weatherDescriptionLabel.isHidden = true
-            weatherImage.isHidden = true
-            return
-        }
-        title = weatherData.location.name
-        tempLabel.text = String(format: "%.0f°", weatherData.current.tempC)
-        feelsLikeLabel.text = String(format: "Feels like: %.0f°", weatherData.current.feelsLikeC)
-        weatherDescriptionLabel.text = weatherData.current.condition.text
-        currentLocationLabel.isHidden = currentLocationLabelIsHidden ? true : false
-        getWeatherImage(from: weatherData.current.condition.icon)
-        weatherForecastTableView.reloadData()
+    private func showLoadingView() {
+        title = ""
+        loadingView.isHidden = false
+        loadingActivityIndicator?.startAnimating()
+        errorDescriptionLabel.isHidden = true
     }
     
-    
+    private func hideLoadingView() {
+        loadingView.isHidden = true
+        loadingActivityIndicator?.stopAnimating()
+    }
+}
+
+//MARK: - Networking
+extension WeatherViewController {
     private func getWeather(from query: String) {
         NetworkManager.shared.fetchWeather(
-            from: "\(Link.weatherURL.rawValue)\(query)") { [weak self] result in
+            from: "\(Link.weatherURL.rawValue)\(query)"
+        ) { [weak self] result in
                 switch result {
                 case .success(let weatherData):
                     self?.weatherData = weatherData
+//                    self?.hideLoadingView()
+                    print("getWeather GO")
                 case .failure(let error):
                     print("error 7")
                     print(error)
@@ -103,40 +144,53 @@ class WeatherViewController: UIViewController {
             switch result {
             case .success(let imageData):
                 self?.weatherImage.image = UIImage(data: imageData)
-                self?.activityIndicator?.stopAnimating()
+                self?.imageActivityIndicator?.stopAnimating()
             case .failure(let error):
                 let defaultImage = UIImage(
                     systemName: "thermometer.medium",
                     withConfiguration: UIImage.SymbolConfiguration(
                         pointSize: 130, weight: .light, scale: .small)
                 )
-                DispatchQueue.main.async { [weak self] in
+                DispatchQueue.main.async {
                     self?.weatherImage.image = defaultImage
-                    self?.activityIndicator?.stopAnimating()
+                    self?.imageActivityIndicator?.stopAnimating()
                 }
                 print("error 8")
                 print(error)
             }
         }
     }
-    
-    private func showActivityIndicator(in view: UIView) -> UIActivityIndicatorView {
-        let activityIndicator = UIActivityIndicatorView(style: .medium)
-        activityIndicator.color = .white
-        activityIndicator.startAnimating()
-        activityIndicator.center = view.center
-        activityIndicator.hidesWhenStopped = true
-        view.addSubview(activityIndicator)
-        return activityIndicator
-    }
-    
+}
+
+//MARK: - Location
+extension WeatherViewController {
     private func requestLocation() {
-        LocationManager.shared.requestLocation { [unowned self] locations in
-            guard let location = locations.last else { return }
+        LocationManager.shared.requestLocation { [weak self] location, error in
+            guard let location = location else {
+                guard let error = error else { return }
+                print("FUCKING ERROR")
+                self?.showLoadingView()
+                self?.loadingActivityIndicator?.stopAnimating()
+                self?.errorDescriptionLabel.isHidden = false
+                self?.errorDescriptionLabel.text =
+                """
+                Something went wrong.
+                Please, check your internet connection and try again.
+                """
+                
+//                switch error.code {
+//                case 0:
+//                    self?.errorDescriptionLabel.text = "error 13 at getErrorLocation"
+//                default:
+//                    self?.errorDescriptionLabel.text = "чет случилось"
+//                }
+                return
+            }
             let lat = location.coordinate.latitude
             let lon = location.coordinate.longitude
-            getWeather(from: "\(lat),\(lon)")
-            currentLocationLabelIsHidden = false
+            self?.getWeather(from: "\(lat),\(lon)")
+            self?.currentLocationLabelIsHidden = false
+            self?.hideLoadingView()
         }
     }
 }
@@ -150,32 +204,36 @@ extension WeatherViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherForecastCell", for: indexPath)
         guard let cell = cell as? WeatherForecastCell else { return UITableViewCell() }
-        
-        guard let weatherData = weatherData else {
-            print("error 9")
-            return UITableViewCell()
-        }
+        guard let weatherData = weatherData else { return UITableViewCell() }
         let weatherForecast = weatherData.forecast.forecastDay[indexPath.row]
         cell.configure(with: weatherForecast)
         return cell
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        "3-day forecast" 
+        return "3-day forecast"
     }
 }
 
 //MARK: - SearchViewControllerDelegate
 extension WeatherViewController: SearchViewControllerDelegate {
     func setNewWeatherValue(from nameLocation: String) {
-        LocationManager.shared.getCoordinate(from: nameLocation) { location, error in
+        showLoadingView()
+        LocationManager.shared.getCoordinate(from: nameLocation) { [weak self] location, error in
             guard error == nil else {
+                guard let error = error else { return }
                 print("Error 12:")
-                print(error?.localizedDescription ?? "No error description")
+                print(error.code)
+                print(error.localizedDescription)
+                if error.code == 8 {
+                    self?.errorDescriptionLabel.isHidden = false
+                    self?.errorDescriptionLabel.text = ""
+                }
                 return
             }
-            self.getWeather(from: "\(location.latitude),\(location.longitude)")
+            self?.getWeather(from: "\(location.latitude),\(location.longitude)")
+            self?.currentLocationLabelIsHidden = true
+            self?.hideLoadingView()
         }
-        currentLocationLabelIsHidden = true
     }
 }
